@@ -2,7 +2,7 @@ using Compori;
 using System;
 using Xunit;
 
-namespace ComporiTestCore
+namespace ComporiTest35
 {
     public class GuardTest
     {
