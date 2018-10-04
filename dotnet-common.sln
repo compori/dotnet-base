@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compori", "src\Compori\Compori.csproj", "{468EF0A5-F094-4430-AC21-46C7236AE675}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compori", "src\Compori\Compori.csproj", "{468EF0A5-F094-4430-AC21-46C7236AE675}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComporiTest35", "test\ComporiTest35\ComporiTest35.csproj", "{594A09BA-8E9D-4B99-A691-33F62441936D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComporiTestCore", "test\ComporiTestCore\ComporiTestCore.csproj", "{4A3DC2C8-701B-4B3A-887C-C614D0B07FF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{468EF0A5-F094-4430-AC21-46C7236AE675}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{468EF0A5-F094-4430-AC21-46C7236AE675}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{468EF0A5-F094-4430-AC21-46C7236AE675}.Release|Any CPU.Build.0 = Release|Any CPU
+		{594A09BA-8E9D-4B99-A691-33F62441936D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{594A09BA-8E9D-4B99-A691-33F62441936D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{594A09BA-8E9D-4B99-A691-33F62441936D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{594A09BA-8E9D-4B99-A691-33F62441936D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3DC2C8-701B-4B3A-887C-C614D0B07FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3DC2C8-701B-4B3A-887C-C614D0B07FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3DC2C8-701B-4B3A-887C-C614D0B07FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3DC2C8-701B-4B3A-887C-C614D0B07FF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

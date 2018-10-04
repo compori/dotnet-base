@@ -6,13 +6,13 @@ namespace Compori.StringExtensions
 {
     public static class StringExtensions
     {
-
-#if NET35
         public static bool IsNullOrWhiteSpace(this String instance)
         {
+#if NET35
             return String.IsNullOrEmpty(instance) || instance.Trim().Length == 0;
-        }
+#else
+            return String.IsNullOrWhiteSpace(instance);
 #endif
-
+        }
     }
 }
