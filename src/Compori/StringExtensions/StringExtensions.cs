@@ -4,8 +4,16 @@ using System.Text;
 
 namespace Compori.StringExtensions
 {
+    /// <summary>
+    /// String Extensions class
+    /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        /// Determines whether the string is null or whitespace.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns><c>true</c> if [is null or white space] [the specified instance]; otherwise, <c>false</c>.</returns>
         public static bool IsNullOrWhiteSpace(this String instance)
         {
 #if NET35
