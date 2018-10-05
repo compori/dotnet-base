@@ -4,6 +4,15 @@
     <TargetFrameworks>net35;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Martin Monnier</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net35|AnyCPU'">
+    <DocumentationFile>D:\Projekte\dotnet-common\src\Compori\Compori.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35|AnyCPU'">
+    <DocumentationFile>D:\Projekte\dotnet-common\src\Compori\Compori.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
