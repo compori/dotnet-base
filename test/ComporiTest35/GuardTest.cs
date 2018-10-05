@@ -2,7 +2,7 @@ using Compori;
 using System;
 using Xunit;
 
-namespace ComporiTest35
+namespace ComporiTest
 {
     public class GuardTest
     {
@@ -10,6 +10,8 @@ namespace ComporiTest35
         public void TestAssertArgumentIsNotNull()
         {
             Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNull(null, null));
+            Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNull(null, ""));
+            Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNull("", null));
         }
     }
 }

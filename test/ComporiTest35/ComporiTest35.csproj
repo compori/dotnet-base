@@ -7,7 +7,7 @@
     <ProjectGuid>{594A09BA-8E9D-4B99-A691-33F62441936D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComporiTest35</RootNamespace>
+    <RootNamespace>ComporiTest</RootNamespace>
     <AssemblyName>ComporiTest35</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -39,9 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GuardTest.cs" />
+    <Compile Include="**\*Test.cs" />    
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensions\StringExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xunit">
@@ -60,4 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(ProjectDir)\..\ComporiTest\*Test.cs" "$(ProjectDir)" /E /Y /D</PreBuildEvent>
+  </PropertyGroup>
 </Project>

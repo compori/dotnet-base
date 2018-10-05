@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace ComporiTest35.StringExtensions
+namespace ComporiTest.StringExtensions
 {
     using Compori.StringExtensions;
 
-    public class StringExtensionsTests
+    public class StringExtensionsTest
     {
         [Fact()]
         public void TestIsNullOrWhiteSpace()
