@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComporiTest", "test\Compori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComporiTest35", "test\ComporiTest35\ComporiTest35.csproj", "{594A09BA-8E9D-4B99-A691-33F62441936D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compori.ServiceTask", "src\Compori.ServiceTask\Compori.ServiceTask.csproj", "{85199EED-A04B-4592-ADFD-61668B3AD2F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{594A09BA-8E9D-4B99-A691-33F62441936D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{594A09BA-8E9D-4B99-A691-33F62441936D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{594A09BA-8E9D-4B99-A691-33F62441936D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85199EED-A04B-4592-ADFD-61668B3AD2F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85199EED-A04B-4592-ADFD-61668B3AD2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85199EED-A04B-4592-ADFD-61668B3AD2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85199EED-A04B-4592-ADFD-61668B3AD2F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
