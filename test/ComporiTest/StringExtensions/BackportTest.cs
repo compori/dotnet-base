@@ -8,10 +8,10 @@ namespace ComporiTest.StringExtensions
 {
     using Compori.StringExtensions;
 
-    public class StringExtensionsTest
+    public class BackportTest
     {
         [Fact()]
-        public void TestIsNullOrWhiteSpace()
+        public void IsNullOrWhiteSpaceTest()
         {
             string sut;
 

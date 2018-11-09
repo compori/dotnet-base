@@ -9,7 +9,7 @@ namespace Compori
     using StringExtensions;
 
     /// <summary>
-    /// Die Klasse Guard bietet Methoden um Parameterwerte zu prüfen. 
+    /// Die Klasse Guard bietet Methoden um Parameterwerte zu prüfen.
     /// Der eigentliche Programmcode wird dadurch sauberer und leichter wartbar.
     /// </summary>
     sealed public class Guard
@@ -48,7 +48,7 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null ist. 
+        /// Sichert zu, dass der Parameterwert nicht null ist.
         /// Wird die Zusicherung verletzt wird eine ArgumentNullException geworfen.
         /// </summary>
         /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
@@ -61,7 +61,7 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null oder leer ist bzw. nur Whitespaces enthält. 
+        /// Sichert zu, dass der Parameterwert nicht null oder leer ist bzw. nur Whitespaces enthält.
         /// Wird die Zusicherung verletzt wird eine ArgumentNullException oder ArgumentException geworfen.
         /// </summary>
         /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
@@ -125,7 +125,7 @@ namespace Compori
             {
                 if (message == null)
                 {
-                    throw new ArgumentOutOfRangeException(argument);
+                    throw new ArgumentOutOfRangeException(argument, value, "Specified argument was out of the range of valid values.");
                 }
 
                 throw new ArgumentOutOfRangeException(argument, value, message);

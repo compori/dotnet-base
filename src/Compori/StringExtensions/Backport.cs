@@ -5,9 +5,9 @@ using System.Text;
 namespace Compori.StringExtensions
 {
     /// <summary>
-    /// String Extensions class
+    /// String Extensions class for Backport
     /// </summary>
-    public static class StringExtensions
+    public static class Backport
     {
         /// <summary>
         /// Determines whether the string is null or whitespace.
