@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Compori\Compori.csproj" />
+    <ProjectReference Include="..\..\src\Compori.Base\Compori.Base.csproj" />
   </ItemGroup>
 
 

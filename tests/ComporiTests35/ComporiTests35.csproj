@@ -53,9 +53,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Compori\Compori.csproj">
-      <Project>{468ef0a5-f094-4430-ac21-46c7236ae675}</Project>
-      <Name>Compori</Name>
+    <ProjectReference Include="..\..\src\Compori.Base\Compori.Base.csproj">
+      <Project>{af87b58b-a85e-4f38-a4ab-bef0efaf342d}</Project>
+      <Name>Compori.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

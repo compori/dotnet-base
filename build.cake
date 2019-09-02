@@ -90,7 +90,9 @@ Task("Test-With-Coverage")
     foreach(var file in projectFiles)
     {
         var coverageFile = file.GetFilenameWithoutExtension() + ".cobertura.xml";
+        var logFileName = file.GetFilenameWithoutExtension() + ".trx";
         var coveragePath = MakeAbsolute(codeCoveragePath).CombineWithFilePath(coverageFile);
+        var logPath = MakeAbsolute(codeCoveragePath).CombineWithFilePath(logFileName);
 
         var settings = new DotNetCoreTestSettings
         {
@@ -99,6 +101,7 @@ Task("Test-With-Coverage")
                 .Append("/p:CollectCoverage=true")
                 .Append("/p:CoverletOutputFormat=cobertura")
                 .Append("/p:CoverletOutput=" + coveragePath.FullPath)
+                .Append($"--logger trx;LogFileName=\"{logPath}\"")
         };
         DotNetCoreTest(file.FullPath, settings);
     }
@@ -107,16 +110,29 @@ Task("Test-With-Coverage")
     foreach(var file35 in project35Tests)
     {
         var dir35 = file35.GetDirectory();
+        var log35FileName = file35.GetFilenameWithoutExtension() + ".trx";
+        var log35Path = MakeAbsolute(codeCoveragePath).CombineWithFilePath(log35FileName);
         VSTest(file35.FullPath, new VSTestSettings() 
         { 
             // https://github.com/cake-build/cake/issues/2077
             #tool Microsoft.TestPlatform
             ToolPath = Context.Tools.Resolve("vstest.console.exe"),
             InIsolation = true,
-            FrameworkVersion = VSTestFrameworkVersion.NET35
+            FrameworkVersion = VSTestFrameworkVersion.NET35,
+            ArgumentCustomization = args => args
+                .Append($"/logger:trx;LogFileName=\"{log35Path}\"")
         });
     }
+});
 
+// Target : Test-With-CoverageReport
+// 
+// Beschreibung
+// Führt alle gefundenen Unit Tests in der Solution aus.
+Task("Test-With-CoverageReport")
+    .IsDependentOn("Test-With-Coverage")
+    .Does(() =>
+{
     ReportGenerator( 
         MakeAbsolute(codeCoveragePath).FullPath + "/*.cobertura.xml", 
         MakeAbsolute(codeCoveragePath).FullPath + "/report",
@@ -128,6 +144,7 @@ Task("Test-With-Coverage")
         }
     );
 });
+
 
 // Target : Build
 // 
