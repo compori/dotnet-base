@@ -7,8 +7,8 @@
     <ProjectGuid>{594A09BA-8E9D-4B99-A691-33F62441936D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComporiTest</RootNamespace>
-    <AssemblyName>ComporiTest35</AssemblyName>
+    <RootNamespace>ComporiTests</RootNamespace>
+    <AssemblyName>ComporiTests35</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -47,7 +47,7 @@
       <Version>1.9.2</Version>
     </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.4.0</Version>
+      <Version>2.4.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -60,6 +60,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(ProjectDir)\..\ComporiTest\*Test.cs" "$(ProjectDir)" /E /Y /D</PreBuildEvent>
+    <PreBuildEvent>xcopy "$(ProjectDir)\..\ComporiTests\*Test.cs" "$(ProjectDir)" /E /Y /D</PreBuildEvent>
   </PropertyGroup>
 </Project>

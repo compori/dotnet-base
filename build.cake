@@ -75,6 +75,58 @@ Task("Build")
     }
 });
 
+// Target : Test-With-Coverage
+// 
+// Beschreibung
+// Führt alle gefundenen Unit Tests in der Solution aus.
+Task("Test-With-Coverage")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var projectFiles = GetFiles("./tests/**/*Tests.csproj");
+   
+    foreach(var file in projectFiles)
+    {
+        var coverageFile = file.GetFilenameWithoutExtension() + ".cobertura.xml";
+        var coveragePath = MakeAbsolute(codeCoveragePath).CombineWithFilePath(coverageFile);
+
+        var settings = new DotNetCoreTestSettings
+        {
+            Configuration = configuration,
+            ArgumentCustomization = args => args
+                .Append("/p:CollectCoverage=true")
+                .Append("/p:CoverletOutputFormat=cobertura")
+                .Append("/p:CoverletOutput=" + coveragePath.FullPath)
+        };
+        DotNetCoreTest(file.FullPath, settings);
+    }
+
+    var project35Tests  = GetFiles("./tests/*Tests35/bin/*/*Tests35.dll");
+    foreach(var file35 in project35Tests)
+    {
+        var dir35 = file35.GetDirectory();
+        VSTest(file35.FullPath, new VSTestSettings() 
+        { 
+            // https://github.com/cake-build/cake/issues/2077
+            #tool Microsoft.TestPlatform
+            ToolPath = Context.Tools.Resolve("vstest.console.exe"),
+            InIsolation = true,
+            FrameworkVersion = VSTestFrameworkVersion.NET35
+        });
+    }
+
+    ReportGenerator( 
+        MakeAbsolute(codeCoveragePath).FullPath + "/*.cobertura.xml", 
+        MakeAbsolute(codeCoveragePath).FullPath + "/report",
+        new ReportGeneratorSettings(){
+            ReportTypes = new[] { 
+                ReportGeneratorReportType.HtmlInline,
+                ReportGeneratorReportType.Badges 
+            }
+        }
+    );
+});
+
 // Target : Build
 // 
 // Description
