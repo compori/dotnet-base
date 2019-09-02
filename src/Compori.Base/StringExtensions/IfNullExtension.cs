@@ -8,7 +8,7 @@ namespace Compori.StringExtensions
     /// <summary>
     /// String Extensions class for handling null values
     /// </summary>
-    public static class NullHandling
+    public static class IfNullExtension
     {
         /// <summary>
         /// If string is null, then the parameter <paramref name="nullValue"/> will be returned.

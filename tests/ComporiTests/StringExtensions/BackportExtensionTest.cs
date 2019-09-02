@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace ComporiTest.StringExtensions
+namespace ComporiTests.StringExtensions
 {
     using Compori.StringExtensions;
 
-    public class BackportTest
+    public class BackportExtensionTest
     {
         [Fact()]
         public void IsNullOrWhiteSpaceTest()

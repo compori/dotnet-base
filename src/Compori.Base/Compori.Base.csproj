@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net35;net461;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <VersionPrefix>0.3.0</VersionPrefix>
+    <VersionPrefix>0.4.0</VersionPrefix>
     <Authors>Martin Monnier</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/compori/dotnet-base</RepositoryUrl>
@@ -14,6 +14,11 @@
     <Description>This package contains a set of common and useful extensions.</Description>
     <Company>Compori</Company>
     <PackageLicenseFile></PackageLicenseFile>
+    <RootNamespace>Compori</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
 
 </Project>

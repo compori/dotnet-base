@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace ComporiTest.StringExtensions
+namespace ComporiTests.StringExtensions
 {
     using Compori.StringExtensions;
 
-    public class NullHandlingTest
+    public class IfNullExtensionTest
     {
         [Fact()]
         public void IfNullTest()

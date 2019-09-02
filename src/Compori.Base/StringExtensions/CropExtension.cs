@@ -8,7 +8,7 @@ namespace Compori.StringExtensions
     /// <summary>
     /// String Extensions class for handling cuts values
     /// </summary>
-    public static class Cutter
+    public static class CropExtension
     {
         /// <summary>
         /// Cuts the string at specified length.
@@ -16,7 +16,7 @@ namespace Compori.StringExtensions
         /// <param name="value">The value.</param>
         /// <param name="length">The length.</param>
         /// <returns>System.String.</returns>
-        public static string Cut(this string value, int length)
+        public static string Crop(this string value, int length)
         {
             if (value != null && value.Length > length)
             {

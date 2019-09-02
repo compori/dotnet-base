@@ -7,7 +7,7 @@ namespace Compori.StringExtensions
     /// <summary>
     /// String Extensions class for Backport
     /// </summary>
-    public static class Backport
+    public static class BackportExtension
     {
         /// <summary>
         /// Determines whether the string is null or whitespace.

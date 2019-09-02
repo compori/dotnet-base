@@ -58,6 +58,9 @@
       <Name>Compori.Base</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StringExtensions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(ProjectDir)\..\ComporiTests\*Test.cs" "$(ProjectDir)" /E /Y /D</PreBuildEvent>
