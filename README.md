@@ -1,3 +1,9 @@
+Compori Base Assembly
+=====================
+[![Build Status](https://dev.azure.com/compori/public-dotnet/_apis/build/status/base-dev?branchName=master)](https://dev.azure.com/compori/public-dotnet/_build/latest?definitionId=18&branchName=master)
+![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/compori/public-dotnet/18)
+![GitHub](https://img.shields.io/github/license/compori/dotnet-base)
+
 # Introduction 
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
@@ -18,3 +24,4 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
+- [Schield.io](https://shields.io/category/build)
