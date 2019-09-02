@@ -7,6 +7,14 @@
     <Authors>Martin Monnier</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Version>0.2.0</Version>
+    <RepositoryUrl>https://github.com/compori/dotnet-base</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/compori/dotnet-base</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <Copyright>Martin Monnier</Copyright>
+    <Product>Compori.Base Assembly</Product>
+    <Description>This package contains a set of common and useful extensions.</Description>
+    <Company>Compori</Company>
+    <PackageLicenseFile></PackageLicenseFile>
   </PropertyGroup>
 
 </Project>

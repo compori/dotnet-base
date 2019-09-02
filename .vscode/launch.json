@@ -1,0 +1,56 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Target Test-With-Coverage",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceRoot}/tools/Cake.CoreCLR/Cake.dll",
+            "args": [
+                "${workspaceRoot}/build.cake",
+                "--target=\"Test-With-Coverage\"",
+                "--debug",
+                "--verbosity=diagnostic"
+            ],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },
+        {
+            "name": "Debug Target Build-Plugin",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceRoot}/tools/Cake.CoreCLR/Cake.dll",
+            "args": [
+                "${workspaceRoot}/build.cake",
+                "--target=\"Build-Plugin\"",
+                "--debug",
+                "--verbosity=diagnostic"
+            ],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },        
+        {
+            "name": "Debug Target Clean",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceRoot}/tools/Cake.CoreCLR/Cake.dll",
+            "args": [
+                "${workspaceRoot}/build.cake",
+                "--target=\"Clean\"",
+                "--debug",
+                "--verbosity=diagnostic"
+            ],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}
