@@ -6,7 +6,6 @@
     <VersionPrefix>0.2.0</VersionPrefix>
     <Authors>Martin Monnier</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>0.2.0</Version>
     <RepositoryUrl>https://github.com/compori/dotnet-base</RepositoryUrl>
     <PackageProjectUrl>https://github.com/compori/dotnet-base</PackageProjectUrl>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>

@@ -2,6 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug Target Build",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceRoot}/tools/Cake.CoreCLR/Cake.dll",
+            "args": [
+                "${workspaceRoot}/build.cake",
+                "--target=\"Build\"",
+                "--VersionSuffix=\"build20190902-1\"",
+                "--debug",
+                "--verbosity=diagnostic"
+            ],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": true,
+            "externalConsole": false
+        },        
+        {
             "name": "Debug Target Test-With-Coverage",
             "type": "coreclr",
             "request": "launch",

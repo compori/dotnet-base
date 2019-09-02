@@ -8,7 +8,8 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var outputPath = Argument<DirectoryPath>("OutputPath", "output");
 var codeCoveragePath = Argument<DirectoryPath>("CodeCoveragePath", "output/coverage");
-var solutionFile = Argument("solutionFile", "dotnet-base.sln");
+var solutionFile = Argument("SolutionFile", "dotnet-base.sln");
+var versionSuffix = Argument("VersionSuffix", "");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -65,14 +66,26 @@ Task("Build")
     {
     
       // Use MSBuild
-      MSBuild(solutionFile, settings =>
-        settings.SetConfiguration(configuration));
+      MSBuild(solutionFile, settings => {
+        settings.ArgumentCustomization = 
+            args => args
+                .Append("/p:IncludeSymbols=true")
+                .Append("/p:IncludeSource=true")
+                .Append($"/p:VersionSuffix={versionSuffix}");
+        settings.SetConfiguration(configuration);
+      });
     
     } else {
     
       // Use XBuild
-      XBuild(solutionFile, settings =>
-        settings.SetConfiguration(configuration));
+      XBuild(solutionFile, settings => {
+        settings.ArgumentCustomization = 
+            args => args
+                .Append("/p:IncludeSymbols=true")
+                .Append("/p:IncludeSource=true")
+                .Append($"/p:VersionSuffix={versionSuffix}");
+        settings.SetConfiguration(configuration);
+      });
 
     }
 });
