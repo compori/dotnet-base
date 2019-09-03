@@ -43,6 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.2.1510.2205</Version>
+    </PackageReference>
     <PackageReference Include="xunit">
       <Version>1.9.2</Version>
     </PackageReference>
@@ -58,9 +61,7 @@
       <Name>Compori.Base</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="StringExtensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(ProjectDir)\..\ComporiTests\*Test.cs" "$(ProjectDir)" /E /Y /D</PreBuildEvent>

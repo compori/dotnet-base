@@ -17,8 +17,4 @@
     <RootNamespace>Compori</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Serialization\" />
-  </ItemGroup>
-
 </Project>
