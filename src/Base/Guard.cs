@@ -9,8 +9,8 @@ namespace Compori
     using StringExtensions;
 
     /// <summary>
-    /// Die Klasse Guard bietet Methoden um Parameterwerte zu prüfen.
-    /// Der eigentliche Programmcode wird dadurch sauberer und leichter wartbar.
+    /// The Guard class provides methods for checking parameter values.
+    /// The actual program code will be cleaner and easier to maintain.
     /// </summary>
     sealed public class Guard
     {
@@ -24,15 +24,15 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null ist.
-        /// Wird die Zusicherung verletzt wird eine ArgumentNullException geworfen.
+        /// Assures that the parameter value is not null.
+        /// If the assertion is violated, an <see cref="ArgumentNullException" /> will be is thrown.
         /// </summary>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <param name="message">Eine Meldung, die als Ausnahmemeldung übergeben wird.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         [DebuggerHidden()]
-        public static void AssertArgumentIsNotNull(Object value, String argument, String message)
+        public static void AssertArgumentIsNotNull(Object value, string argument, string message)
         {
             // Prüfe den Parametername
             if (argument.IsNullOrWhiteSpace())
@@ -51,37 +51,35 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null ist.
-        /// Wird die Zusicherung verletzt wird eine ArgumentNullException geworfen.
+        /// Assures that the parameter value is not null.
+        /// If the assertion is violated, an <see cref="ArgumentNullException" /> will be is thrown.
         /// </summary>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
         [DebuggerHidden()]
-        public static void AssertArgumentIsNotNull(Object value, String argument)
+        public static void AssertArgumentIsNotNull(object value, string argument)
         {
             Guard.AssertArgumentIsNotNull(value, argument, null);
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null oder leer ist bzw. nur Whitespaces enthält.
-        /// Wird die Zusicherung verletzt wird eine ArgumentNullException oder ArgumentException geworfen.
+        /// Assures that the parameter value is not null or empty or contains only whitespaces.
+        /// If the assertion is violated, an <see cref="ArgumentNullException" /> will be is thrown.
         /// </summary>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <param name="message">Eine Meldung, die als Ausnahmemeldung übergeben wird.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
-        /// <exception cref="System.ArgumentNullException">Der Wert des Parameters ist null oder leer - value.</exception>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         [DebuggerHidden()]
-        public static void AssertArgumentIsNotNullOrWhiteSpace(String value, String argument, String message)
+        public static void AssertArgumentIsNotNullOrWhiteSpace(string value, string argument, string message)
         {
-            // Teste den Parameter "argument"
+            // Check parameter "argument"
             if (argument.IsNullOrWhiteSpace())
             {
                 throw new ArgumentNullException(nameof(argument));
             }
 
-            // Teste den Parameterwert für "argument"
+            // Check value of "argument"
             if (value.IsNullOrWhiteSpace())
             {
                 if (message == null)
@@ -93,37 +91,36 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert nicht null oder leer ist bzw. nur Whitespaces enthält.
-        /// Wird die Zusicherung verletzt wird eine ArgumentNullException oder ArgumentException geworfen.
+        /// Assures that the parameter value is not null or empty or contains only whitespaces.
+        /// If the assertion is violated, an <see cref="ArgumentNullException" /> will be is thrown.
         /// </summary>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
-        /// <exception cref="System.ArgumentNullException">Der Wert des Parameters ist null oder leer - value.</exception>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
         [DebuggerHidden()]
-        public static void AssertArgumentIsNotNullOrWhiteSpace(String value, String argument)
+        public static void AssertArgumentIsNotNullOrWhiteSpace(string value, string argument)
         {
             Guard.AssertArgumentIsNotNullOrWhiteSpace(value, argument, null);
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert innerhalb eines Gültigkeitsbereiches liegt, der über eine Funktion geprüft werden kann.
-        /// Wird die Zusicherung verletzt wird eine ArgumentOutOfRangeException geworfen.
+        /// Assures that the parameter value is within a validity range that can be checked by a function.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException" /> will be thrown.
         /// </summary>
-        /// <typeparam name="T">Generische Typ des Wertes</typeparam>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <param name="check">Die aufzurufende Prüffunktion.</param>
-        /// <param name="message">Eine Meldung, die als Ausnahmemeldung übergeben wird.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException"></exception>
+        /// <typeparam name="T">Generic type of value</typeparam>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="check">The validation function to be called.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Specified argument was out of the range of valid values.
+        /// </exception>
         [DebuggerHidden()]
-        public static void AssertArgumentIsInRange<T>(T value, String argument, Func<T, Boolean> check, String message)
+        public static void AssertArgumentIsInRange<T>(T value, string argument, Func<T, bool> check, string message)
         {
             Guard.AssertArgumentIsNotNullOrWhiteSpace(argument, nameof(argument));
             Guard.AssertArgumentIsNotNull(check, nameof(check));
 
-            // prüfe die Check Funktion
+            // Invoke check function
             if (!check(value))
             {
                 if (message == null)
@@ -136,21 +133,50 @@ namespace Compori
         }
 
         /// <summary>
-        /// Sichert zu, dass der Parameterwert innerhalb eines Gültigkeitsbereiches liegt, der über eine Funktion geprüft werden kann.
-        /// Wird die Zusicherung verletzt wird eine <see cref="ArgumentOutOfRangeException"/> geworfen.
+        /// Assures that the parameter value is within a validity range that can be checked by a function.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException"/> will be thrown.
         /// </summary>
-        /// <typeparam name="T">Generische Typ des Wertes</typeparam>
-        /// <param name="value">Der Wert des zu prüfenden Parameters.</param>
-        /// <param name="argument">Der Name des zu prüfenden Parameters.</param>
-        /// <param name="check">Die aufzurufende Prüffunktion.</param>
-        /// <exception cref="System.ArgumentNullException">Der Name des Parameters ist null - argument.</exception>
-        /// <exception cref="System.ArgumentException">Der Name des Parameters ist leer oder enthält nur Whitespaces - argument.</exception>
-        /// <exception cref="System.ArgumentNullException">Die Paremeterprüffunktion darf nicht null sein - check.</exception>
+        /// <typeparam name="T">Generic type of value</typeparam>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="check">The validation function to be called.</param>
         [DebuggerHidden()]
-        public static void AssertArgumentIsInRange<T>(T value, String argument, Func<T, Boolean> check)
+        public static void AssertArgumentIsInRange<T>(T value, string argument, Func<T, bool> check)
         {
             Guard.AssertArgumentIsInRange<T>(value, argument, check, null);
         }
 
+        /// <summary>
+        /// Asserts that the object is not disposed.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        /// <exception cref="ObjectDisposedException"></exception>
+        [DebuggerHidden()]
+        public static void AssertObjectIsNotDisposed(IDisposalState instance, string message)
+        {
+            Guard.AssertArgumentIsNotNull(instance, nameof(instance));
+
+            if (instance.IsDisposed)
+            {
+                if (message == null)
+                {
+                    throw new ObjectDisposedException(instance.ToString());
+                }
+
+                throw new ObjectDisposedException(instance.ToString(), message);
+            }
+        }
+
+        /// <summary>
+        /// Asserts that the object is not disposed.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <exception cref="ObjectDisposedException"></exception>
+        [DebuggerHidden()]
+        public static void AssertObjectIsNotDisposed(IDisposalState value)
+        {
+            Guard.AssertObjectIsNotDisposed(value, null);
+        }
     }
 }

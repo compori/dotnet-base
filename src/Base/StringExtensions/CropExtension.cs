@@ -11,7 +11,7 @@ namespace Compori.StringExtensions
     public static class CropExtension
     {
         /// <summary>
-        /// Cuts the string at specified length.
+        /// Crops the string at specified length.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="length">The length.</param>

@@ -1,4 +1,5 @@
 using Compori;
+using Moq;
 using System;
 using Xunit;
 
@@ -135,6 +136,43 @@ namespace ComporiTest
             Assert.StartsWith("My Message", exception.Message);
 #endif
 
+        }
+
+        [Fact]
+        public void TestAssertObjectIsNotDisposed()
+        {
+            Mock<IDisposalState> mock;
+            bool expect = false;
+            string message = "";
+            IDisposalState sut;
+
+            // Testing Guard on disposal state
+            expect = false;
+            mock = new Mock<IDisposalState>();
+            mock.Setup(service => service.IsDisposed).Returns(expect);
+            sut = mock.Object;
+            Guard.AssertObjectIsNotDisposed(sut);
+            mock.Verify(service => service.IsDisposed, Times.Once());
+
+            expect = true;
+            mock = new Mock<IDisposalState>();
+            mock.Setup(service => service.IsDisposed).Returns(expect);
+            sut = mock.Object;
+            Assert.Throws<ObjectDisposedException>(() => Guard.AssertObjectIsNotDisposed(sut));
+            mock.Verify(service => service.IsDisposed, Times.Once());
+
+            message = "Dispose message.";
+            expect = true;
+            mock = new Mock<IDisposalState>();
+            mock.Setup(service => service.IsDisposed).Returns(expect);
+            sut = mock.Object;
+            var exception = Assert.Throws<ObjectDisposedException>(() => Guard.AssertObjectIsNotDisposed(sut, message));
+            mock.Verify(service => service.IsDisposed, Times.Once());
+#if NET35
+            Assert.True(exception.Message.StartsWith(message));
+#else
+            Assert.StartsWith(message, exception.Message);
+#endif
         }
     }
 }
