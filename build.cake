@@ -106,7 +106,7 @@ Task("Test-With-CodeCoverage")
     var includeFilter = "[Compori.Base]*"; 
     var excludeFilter = "[xunit.*]*"; 
 
-    FilePath coverletPath = Context.Tools.Resolve("coverlet.exe");
+    FilePath coverletPath = Context.Tools.Resolve("coverlet.console.dll");
     Information("coverlet.exe: " + (coverletPath ?? "N/A"));
     FilePath vstestPath = Context.Tools.Resolve("vstest.console.exe");    
     Information("vstest.console.exe: " + (vstestPath ?? "N/A"));
@@ -125,18 +125,19 @@ Task("Test-With-CodeCoverage")
         var coveragePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(coverageFile);
 
         // VSTest test
-        StartProcess(
+        DotNetCoreExecute(
             coverletPath,
-            new ProcessSettings {
-                Arguments = new ProcessArgumentBuilder()
+            new ProcessArgumentBuilder()
                     .Append(testAssemblyPath)
                     .Append($"--target \"{vstestPath}\"")
                     .Append($"--targetargs \"{testAssemblyPath} /Framework:Framework35 /logger:trx;LogFileName=\\\"{logFilePath}\\\"\"")
                     .Append("--format cobertura")
                     .Append("--output \"" + coveragePath.FullPath + "\"")
                     .Append("--include \"" + includeFilter + "\"")
-                    .Append("--exclude \"" + excludeFilter + "\"")
-            });  
+                    .Append("--exclude \"" + excludeFilter + "\""),
+            new DotNetCoreExecuteSettings {               
+            }
+        );       
     }
 
     var targetFrameworks = new string[] {"net461", "netcoreapp2.1"};
