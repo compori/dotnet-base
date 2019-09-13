@@ -107,7 +107,10 @@ Task("Test-With-CodeCoverage")
     var excludeFilter = "[xunit.*]*"; 
 
     FilePath coverletPath = Context.Tools.Resolve("coverlet.exe");
+    Information("coverlet.exe: " + (coverletPath ?? "N/A"));
     FilePath vstestPath = Context.Tools.Resolve("vstest.console.exe");    
+    Information("vstest.console.exe: " + (vstestPath ?? "N/A"));
+
     var testAssemblies = GetFiles($"./tests/**/bin/{configuration}/net35/*Tests.dll");
     foreach(var testAssembly in testAssemblies)
     {
