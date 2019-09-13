@@ -18,13 +18,13 @@
             "externalConsole": false
         },        
         {
-            "name": "Debug Target Test-With-Coverage",
+            "name": "Debug Target Test-With-CodeCoverage",
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceRoot}/tools/Cake.CoreCLR/Cake.dll",
             "args": [
                 "${workspaceRoot}/build.cake",
-                "--target=\"Test-With-Coverage\"",
+                "--target=\"Test-With-CodeCoverage\"",
                 "--debug",
                 "--verbosity=diagnostic"
             ],

@@ -1,13 +1,16 @@
 #tool nuget:?package=ReportGenerator&version=4.2.15
+#tool nuget:?package=coverlet.console&version=1.5.3
+// https://github.com/cake-build/cake/issues/2077
+#tool nuget:?package=Microsoft.TestPlatform&version=16.2.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Default");
-var configuration = Argument("configuration", "Release");
-var outputPath = Argument<DirectoryPath>("OutputPath", "output");
-var codeCoveragePath = Argument<DirectoryPath>("CodeCoveragePath", "output/coverage");
+var configuration = Argument("Configuration", "Release");
+var outputDirectory = Argument<DirectoryPath>("OutputDirectory", "output");
+var codeCoverageDirectory = Argument<DirectoryPath>("CodeCoverageDirectory", "output/coverage");
 var solutionFile = Argument("SolutionFile", "dotnet-base.sln");
 var versionSuffix = Argument("VersionSuffix", "");
 
@@ -18,12 +21,14 @@ var versionSuffix = Argument("VersionSuffix", "");
 // Target : Clean
 // 
 // Description
-// Clean all directories used by build artifacts.
+// - Cleans binary directories.
+// - Cleans output directory.
+// - Cleans the test coverage directory.
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectory(outputPath);
-    CleanDirectory(codeCoveragePath);
+    CleanDirectory(codeCoverageDirectory);
+    CleanDirectory(outputDirectory);
 
     // remove all binaries in source files
     var srcBinDirectories = GetDirectories("./src/**/bin");
@@ -43,7 +48,7 @@ Task("Clean")
 // Target : Restore-NuGet-Packages
 // 
 // Description
-// Restores all needed NuGet packages for projects.
+// - Restores all needed NuGet packages for the projects.
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
@@ -57,7 +62,7 @@ Task("Restore-NuGet-Packages")
 // Target : Build
 // 
 // Description
-// Creates the artifacts.
+// - Builds the artifacts.
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
@@ -92,63 +97,86 @@ Task("Build")
 
 // Target : Test-With-Coverage
 // 
-// Beschreibung
-// Führt alle gefundenen Unit Tests in der Solution aus.
-Task("Test-With-Coverage")
+// Description
+// - Executes the test and generates with code coverage files.
+Task("Test-With-CodeCoverage")
     .IsDependentOn("Build")
     .Does(() =>
 {
+    var includeFilter = "[Compori.Base]*"; 
+    var excludeFilter = "[xunit.*]*"; 
+
+    FilePath coverletPath = Context.Tools.Resolve("coverlet.exe");
+    FilePath vstestPath = Context.Tools.Resolve("vstest.console.exe");    
+    var testAssemblies = GetFiles($"./tests/**/bin/{configuration}/net35/*Tests.dll");
+    foreach(var testAssembly in testAssemblies)
+    {
+        var assemblyDirectory = testAssembly.GetDirectory();
+        var testAssemblyPath = testAssembly.FullPath;
+        var targetFramework = assemblyDirectory.Segments[assemblyDirectory.Segments.Length - 1];
+        
+        var logFileName = testAssembly.GetFilenameWithoutExtension() + "." + targetFramework + ".trx";
+        var logFilePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(logFileName);
+
+        var coverageFile = testAssembly.GetFilenameWithoutExtension() + "." + targetFramework + ".cobertura.xml";
+        var coveragePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(coverageFile);
+
+        // VSTest test
+        StartProcess(
+            coverletPath,
+            new ProcessSettings {
+                Arguments = new ProcessArgumentBuilder()
+                    .Append(testAssemblyPath)
+                    .Append($"--target \"{vstestPath}\"")
+                    .Append($"--targetargs \"{testAssemblyPath} /Framework:Framework35 /logger:trx;LogFileName=\\\"{logFilePath}\\\"\"")
+                    .Append("--format cobertura")
+                    .Append("--output \"" + coveragePath.FullPath + "\"")
+                    .Append("--include \"" + includeFilter + "\"")
+                    .Append("--exclude \"" + excludeFilter + "\"")
+            });  
+    }
+
+    var targetFrameworks = new string[] {"net461", "netcoreapp2.1"};
     var projectFiles = GetFiles("./tests/**/*Tests.csproj");
-   
-    foreach(var file in projectFiles)
+    foreach(var projectFile in projectFiles)
     {
-        var coverageFile = file.GetFilenameWithoutExtension() + ".cobertura.xml";
-        var logFileName = file.GetFilenameWithoutExtension() + ".trx";
-        var coveragePath = MakeAbsolute(codeCoveragePath).CombineWithFilePath(coverageFile);
-        var logPath = MakeAbsolute(codeCoveragePath).CombineWithFilePath(logFileName);
-
-        var settings = new DotNetCoreTestSettings
+        foreach(var targetFramework in targetFrameworks)
         {
-            Configuration = configuration,
-            ArgumentCustomization = args => args
-                .Append("/p:CollectCoverage=true")
-                .Append("/p:CoverletOutputFormat=cobertura")
-                .Append("/p:CoverletOutput=" + coveragePath.FullPath)
-                .Append($"--logger trx;LogFileName=\"{logPath}\"")
-        };
-        DotNetCoreTest(file.FullPath, settings);
-    }
+            var coverageFile = projectFile.GetFilenameWithoutExtension() + "." + targetFramework + ".cobertura.xml";
+            var coveragePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(coverageFile);
+            var logFileName = projectFile.GetFilenameWithoutExtension() + "." + targetFramework + ".trx";
+            var logFilePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(logFileName);
 
-    var project35Tests  = GetFiles("./tests/*Tests35/bin/*/*Tests35.dll");
-    foreach(var file35 in project35Tests)
-    {
-        var dir35 = file35.GetDirectory();
-        var log35FileName = file35.GetFilenameWithoutExtension() + ".trx";
-        var log35Path = MakeAbsolute(codeCoveragePath).CombineWithFilePath(log35FileName);
-        VSTest(file35.FullPath, new VSTestSettings() 
-        { 
-            // https://github.com/cake-build/cake/issues/2077
-            #tool Microsoft.TestPlatform
-            ToolPath = Context.Tools.Resolve("vstest.console.exe"),
-            InIsolation = true,
-            FrameworkVersion = VSTestFrameworkVersion.NET35,
-            ArgumentCustomization = args => args
-                .Append($"/logger:trx;LogFileName=\"{log35Path}\"")
-        });
-    }
+            // coverlet test via dotnet test
+            var settings = new DotNetCoreTestSettings
+            {
+                Configuration = configuration,
+                Framework = targetFramework,
+                ArgumentCustomization = args => args
+                    .Append("/p:CollectCoverage=true")
+                    .Append("/p:CoverletOutputFormat=cobertura")
+                    .Append($"/p:Include={includeFilter}")                    
+                    .Append($"/p:Exclude={excludeFilter}")                    
+                    .Append($"/p:CoverletOutput=\"{coveragePath.FullPath}\"")
+                    .Append($"--logger trx;LogFileName=\"{logFilePath}\"")
+            };
+            DotNetCoreTest(projectFile.FullPath, settings);
+        }
+    }           
 });
 
 // Target : Test-With-CoverageReport
 // 
-// Beschreibung
-// Führt alle gefundenen Unit Tests in der Solution aus.
-Task("Test-With-CoverageReport")
-    .IsDependentOn("Test-With-Coverage")
+// Description
+// - Executes the test and generates with code coverage files.
+// - Generates a code coverage html report with badges.
+Task("Test-With-CodeCoverageReport")
+    .IsDependentOn("Test-With-CodeCoverage")
     .Does(() =>
 {
     ReportGenerator( 
-        MakeAbsolute(codeCoveragePath).FullPath + "/*.cobertura.xml", 
-        MakeAbsolute(codeCoveragePath).FullPath + "/report",
+        MakeAbsolute(codeCoverageDirectory).FullPath + "/*.cobertura.xml", 
+        MakeAbsolute(codeCoverageDirectory).FullPath + "/report",
         new ReportGeneratorSettings(){
             ReportTypes = new[] { 
                 ReportGeneratorReportType.HtmlInline,
@@ -158,11 +186,10 @@ Task("Test-With-CoverageReport")
     );
 });
 
-
 // Target : Build
 // 
 // Description
-// Setup the default task.
+// - Setup the default task.
 Task("Default")
     .IsDependentOn("Build");
 

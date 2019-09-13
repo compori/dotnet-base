@@ -425,8 +425,30 @@ namespace ComporiTests.Text.VariableParametersParser
             sut2 = new ParserResult(data2);
             Assert.Equal(expect, sut.Equals(sut2));
         }
+#if NET35
 
-#if !NET35
+        [Fact()]
+        public void GetHashCodeTest()
+        {
+            ParserResult sut;
+
+            // Testing Hashcode
+            var mock = new Dictionary<string, string>();
+            int expect = 0;
+            int actual = 0;
+            sut = new ParserResult(mock);
+
+            expect = mock.GetHashCode();
+            actual = sut.GetHashCode();
+            Assert.Equal(expect, actual);
+
+            mock.Add("akey", "testing value");
+            expect = mock.GetHashCode();
+            actual = sut.GetHashCode();
+            Assert.Equal(expect, actual);
+        }
+
+#else
 
         [Fact()]
         public void GetHashCodeTest()

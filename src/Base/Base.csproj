@@ -15,6 +15,7 @@
     <Company>Compori</Company>
     <PackageLicenseFile></PackageLicenseFile>
     <RootNamespace>Compori</RootNamespace>
+    <AssemblyName>Compori.Base</AssemblyName>
   </PropertyGroup>
 
 </Project>

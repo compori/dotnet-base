@@ -7,6 +7,12 @@ namespace ComporiTest
     public class GuardTest
     {
         [Fact]
+        public void TestConstructorFailed()
+        {
+            Assert.Throws<System.Reflection.TargetInvocationException>(() => (Guard)Activator.CreateInstance(typeof(Guard), true));
+        }
+
+        [Fact]
         public void AssertArgumentIsNotNullTest()
         {
             //

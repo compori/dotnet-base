@@ -18,7 +18,10 @@ namespace Compori
         /// <summary>
         /// Prevents a default instance of the <see cref="Guard"/> class from being created.
         /// </summary>
-        private Guard() { }
+        private Guard()
+        {
+            throw new InvalidOperationException("This class cannot be instantiated.");
+        }
 
         /// <summary>
         /// Sichert zu, dass der Parameterwert nicht null ist.
