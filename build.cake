@@ -1,18 +1,19 @@
-#tool nuget:?package=ReportGenerator&version=4.2.15
-#tool nuget:?package=coverlet.console&version=1.5.3
-// https://github.com/cake-build/cake/issues/2077
-#tool nuget:?package=Microsoft.TestPlatform&version=16.2.0
-
-//////////////////////////////////////////////////////////////////////
-// ARGUMENTS
-//////////////////////////////////////////////////////////////////////
+#tool nuget:?package=NuGet.CommandLine&version=6.5.0
+#tool nuget:?package=Microsoft.TestPlatform&version=17.6.0
+#tool nuget:?package=coverlet.console&version=3.2.0
+#tool nuget:?package=ReportGenerator&version=5.1.20
+// #addin nuget:?package=Cake.Coverlet&version=3.0.4
+#addin nuget:?package=Cake.Coverlet&version=5.1.1
 
 var target = Argument("target", "Default");
 var configuration = Argument("Configuration", "Release");
 var outputDirectory = Argument<DirectoryPath>("OutputDirectory", "output");
 var codeCoverageDirectory = Argument<DirectoryPath>("CodeCoverageDirectory", "output/coverage");
-var solutionFile = Argument("SolutionFile", "dotnet-base.sln");
+var packageDirectory = Argument<DirectoryPath>("CodeCoverageDirectory", "output/packages");
+var solutionFile = Argument("SolutionFile", "base.sln");
 var versionSuffix = Argument("VersionSuffix", "");
+var nugetDeployFeed = Argument("NugetDeployFeed", "https://api.nuget.org/v3/index.json");
+var nugetDeployApiKey = Argument("NugetDeployApiKey", "");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -27,12 +28,21 @@ var versionSuffix = Argument("VersionSuffix", "");
 Task("Clean")
     .Does(() =>
 {
+    CleanDirectory(packageDirectory);
     CleanDirectory(codeCoverageDirectory);
     CleanDirectory(outputDirectory);
+
 
     // remove all binaries in source files
     var srcBinDirectories = GetDirectories("./src/**/bin");
     foreach(var directory in srcBinDirectories)
+    {
+        CleanDirectory(directory);
+    }
+
+    // remove all intermediates in source files
+    var srcObjDirectories = GetDirectories("./src/**/obj");
+    foreach(var directory in srcObjDirectories)
     {
         CleanDirectory(directory);
     }
@@ -43,6 +53,13 @@ Task("Clean")
     {
         CleanDirectory(directory);
     }
+    
+    // remove all intermediates in source files
+    var testsObjDirectories = GetDirectories("./tests/**/obj");
+    foreach(var directory in testsObjDirectories)
+    {
+        CleanDirectory(directory);
+    }    
 });
 
 // Target : Restore-NuGet-Packages
@@ -95,91 +112,73 @@ Task("Build")
     }
 });
 
-// Target : Test-With-Coverage
+// Target : Test
 // 
 // Description
 // - Executes the test and generates with code coverage files.
-Task("Test-With-CodeCoverage")
+Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var includeFilter = "[Compori.Base]*"; 
-    var excludeFilter = "[xunit.*]*"; 
+    CreateDirectory(codeCoverageDirectory);
 
-    FilePath coverletPath = Context.Tools.Resolve("coverlet.console.dll");
+    var includeFilter = "[Compori.Base*]Compori*";
+    var excludeFilter = "[xunit.*]*";
+
+    var coverletPath = Context.Tools.Resolve("coverlet.console.dll");
     Information("coverlet.exe: " + (coverletPath ?? "N/A"));
-    FilePath vstestPath = Context.Tools.Resolve("vstest.console.exe");    
+    var vstestPath = Context.Tools.Resolve("vstest.console.exe");    
     Information("vstest.console.exe: " + (vstestPath ?? "N/A"));
 
-    var testAssemblies = GetFiles($"./tests/**/bin/{configuration}/net35/*Tests.dll");
-    foreach(var testAssembly in testAssemblies)
-    {
-        var assemblyDirectory = testAssembly.GetDirectory();
-        var testAssemblyPath = testAssembly.FullPath;
-        var targetFramework = assemblyDirectory.Segments[assemblyDirectory.Segments.Length - 1];
-        
-        var logFileName = testAssembly.GetFilenameWithoutExtension() + "." + targetFramework + ".trx";
-        var logFilePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(logFileName);
-
-        var coverageFile = testAssembly.GetFilenameWithoutExtension() + "." + targetFramework + ".cobertura.xml";
-        var coveragePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(coverageFile);
-
-        // VSTest test
-        DotNetCoreExecute(
-            coverletPath,
-            new ProcessArgumentBuilder()
-                    .Append(testAssemblyPath)
-                    .Append($"--target \"{vstestPath}\"")
-                    .Append($"--targetargs \"{testAssemblyPath} /Framework:Framework35 /logger:trx;LogFileName=\\\"{logFilePath}\\\"\"")
-                    .Append("--format cobertura")
-                    .Append("--output \"" + coveragePath.FullPath + "\"")
-                    .Append("--include \"" + includeFilter + "\"")
-                    .Append("--exclude \"" + excludeFilter + "\""),
-            new DotNetCoreExecuteSettings {               
-            }
-        );       
-    }
-
-    var targetFrameworks = new string[] {"net461", "netcoreapp2.1"};
+    var targetFrameworks = new string[] {"net48", "net6.0"};
     var projectFiles = GetFiles("./tests/**/*Tests.csproj");
     foreach(var projectFile in projectFiles)
     {
         foreach(var targetFramework in targetFrameworks)
         {
-            var coverageFile = projectFile.GetFilenameWithoutExtension() + "." + targetFramework + ".cobertura.xml";
+            var coverageFile = projectFile.GetFilenameWithoutExtension() + ".cobertura.xml";
             var coveragePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(coverageFile);
             var logFileName = projectFile.GetFilenameWithoutExtension() + "." + targetFramework + ".trx";
             var logFilePath = MakeAbsolute(codeCoverageDirectory).CombineWithFilePath(logFileName);
 
             // coverlet test via dotnet test
-            var settings = new DotNetCoreTestSettings
-            {
-                Configuration = configuration,
-                Framework = targetFramework,
-                ArgumentCustomization = args => args
-                    .Append("/p:CollectCoverage=true")
-                    .Append("/p:CoverletOutputFormat=cobertura")
-                    .Append($"/p:Include={includeFilter}")                    
-                    .Append($"/p:Exclude={excludeFilter}")                    
-                    .Append($"/p:CoverletOutput=\"{coveragePath.FullPath}\"")
-                    .Append($"--logger trx;LogFileName=\"{logFilePath}\"")
-            };
-            DotNetCoreTest(projectFile.FullPath, settings);
+            DotNetTest(
+                projectFile.FullPath,
+                new DotNetTestSettings
+                {
+                    Configuration = configuration,
+                    Framework = targetFramework,
+                    NoBuild = true,
+                    // https://github.com/dotnet/sdk/issues/29543
+                    EnvironmentVariables = new Dictionary<string, string> 
+                    {
+                        { "DOTNET_CLI_UI_LANGUAGE", "en-US" }
+                    },
+                    Verbosity = DotNetVerbosity.Minimal,
+                    ArgumentCustomization = args => args
+                        .Append($"--logger trx;LogFileName=\"{logFilePath}\"")                
+                },
+                new CoverletSettings 
+                {
+                    CollectCoverage = true,
+                    CoverletOutputFormat = CoverletOutputFormat.cobertura,
+                    CoverletOutputDirectory = codeCoverageDirectory,
+                    CoverletOutputName = coverageFile,
+                    Include = new List<string>() 
+                    {
+                        includeFilter
+                    },
+                    Exclude = new List<string>() 
+                    {
+                        excludeFilter
+                    }
+                }
+            );
         }
-    }           
-});
+    }
 
-// Target : Test-With-CoverageReport
-// 
-// Description
-// - Executes the test and generates with code coverage files.
-// - Generates a code coverage html report with badges.
-Task("Test-With-CodeCoverageReport")
-    .IsDependentOn("Test-With-CodeCoverage")
-    .Does(() =>
-{
     ReportGenerator( 
-        MakeAbsolute(codeCoverageDirectory).FullPath + "/*.cobertura.xml", 
+        new GlobPattern(MakeAbsolute(codeCoverageDirectory).FullPath + "/*.cobertura.*.xml"), 
         MakeAbsolute(codeCoverageDirectory).FullPath + "/report",
         new ReportGeneratorSettings(){
             ReportTypes = new[] { 
@@ -188,6 +187,49 @@ Task("Test-With-CodeCoverageReport")
             }
         }
     );
+});
+
+// Target : Deploy
+// 
+// Description
+// - Deploys package to nuget repository.
+Task("Deploy")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    CreateDirectory(packageDirectory);
+
+    var packageFiles = GetFiles($"src/**/bin/{configuration}/*.nupkg");
+    foreach(var packageFile in packageFiles)
+    {
+        var packageFilename = packageFile.GetFilename();
+        var destionation = MakeAbsolute(packageDirectory).CombineWithFilePath(packageFilename);
+        CopyFile(packageFile.FullPath, destionation);
+    }
+
+    var spackageFiles = GetFiles($"src/**/bin/{configuration}/*.snupkg");
+    foreach(var spackageFile in spackageFiles)
+    {
+        var spackageFilename = spackageFile.GetFilename();
+        var sdestination = MakeAbsolute(packageDirectory).CombineWithFilePath(spackageFilename);
+        CopyFile(spackageFile.FullPath, sdestination);
+    }
+
+    packageFiles = GetFiles(MakeAbsolute(packageDirectory).FullPath + "/*.nupkg");
+    spackageFiles = GetFiles(MakeAbsolute(packageDirectory).FullPath + "/*.snupkg");
+    if(string.IsNullOrWhiteSpace(nugetDeployApiKey)) 
+    {
+        Error("No nuget api key provided. Please use argument e.g. --NugetDeployApiKey=1234567-8901-abcd-ef12-13212313121");
+        return;
+    }
+
+    // Push the package.
+    NuGetPush(packageFiles,
+        new NuGetPushSettings {
+                Source = nugetDeployFeed,
+                ApiKey = nugetDeployApiKey,
+                SkipDuplicate = true
+    });    
 });
 
 // Target : Build

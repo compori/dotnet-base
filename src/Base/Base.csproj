@@ -1,21 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net461;netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <VersionPrefix>0.4.0</VersionPrefix>
-    <Authors>Martin Monnier</Authors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RepositoryUrl>https://github.com/compori/dotnet-base</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/compori/dotnet-base</PackageProjectUrl>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
-    <Copyright>Martin Monnier</Copyright>
-    <Product>Compori.Base Assembly</Product>
-    <Description>This package contains a set of common and useful extensions.</Description>
-    <Company>Compori</Company>
-    <PackageLicenseFile></PackageLicenseFile>
+    <TargetFrameworks>net35;net48;net8</TargetFrameworks>
     <RootNamespace>Compori</RootNamespace>
     <AssemblyName>Compori.Base</AssemblyName>
+    <LangVersion>8</LangVersion>
+    <VersionPrefix>0.5.0</VersionPrefix>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>Compori</Company>
+    <Authors>Martin Monnier</Authors>
+    <Product>Compori.Base Assembly</Product>
+    <Description>This package contains a set of common and useful extensions.</Description>
+    <Copyright>Martin Monnier</Copyright>
+    <RepositoryUrl>https://github.com/compori/dotnet-base</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/compori/dotnet-base</PackageProjectUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Deterministic>true</Deterministic>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="docs\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>

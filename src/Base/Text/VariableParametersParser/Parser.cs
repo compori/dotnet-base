@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Compori.Text.VariableParametersParser
 {
@@ -88,17 +85,14 @@ namespace Compori.Text.VariableParametersParser
                     }
                 }
 
-                // Upper case key for case insensitive results
+                // Upper case key for case-insensitive results
                 if (upperCaseKeys)
                 {
                     key = key.ToUpperInvariant();
                 }
 
                 // Add or replace value both
-                if (result.ContainsKey(key))
-                {
-                    result.Remove(key);
-                }
+                result.Remove(key);
                 result.Add(key, keyValue);
             }
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Compori.StringExtensions
+﻿namespace Compori.StringExtensions
 {
     /// <summary>
     /// String Extensions class for handling null values
@@ -18,11 +13,7 @@ namespace Compori.StringExtensions
         /// <returns>System.String.</returns>
         public static string IfNull(this string value, string nullValue)
         {
-            if (value != null)
-            {
-                return value;
-            }
-            return nullValue;
+            return value != null ? value : nullValue;
         }
 
         /// <summary>

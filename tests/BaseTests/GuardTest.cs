@@ -1,18 +1,13 @@
 using Compori;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace ComporiTest
 {
     public class GuardTest
     {
-        [Fact]
-        public void TestConstructorFailed()
-        {
-            Assert.Throws<System.Reflection.TargetInvocationException>(() => (Guard)Activator.CreateInstance(typeof(Guard), true));
-        }
-
         [Fact]
         public void AssertArgumentIsNotNullTest()
         {
@@ -27,10 +22,8 @@ namespace ComporiTest
             //
             // Test usage
             //
-            ArgumentNullException exception;
 
-            // null
-            exception = Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNull(null, "paramName"));
+            var exception = Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNull(null, "paramName"));
             Assert.Equal("paramName", exception.ParamName);
 
             // assertion fits
@@ -62,10 +55,8 @@ namespace ComporiTest
             //
             // Test usage
             //
-            ArgumentNullException exception;
 
-            // null
-            exception = Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNullOrWhiteSpace(null, "paramName"));
+            var exception = Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNullOrWhiteSpace(null, "paramName"));
             Assert.Equal("paramName", exception.ParamName);
 
             // empty
@@ -88,11 +79,7 @@ namespace ComporiTest
             //
             exception = Assert.Throws<ArgumentNullException>(() => Guard.AssertArgumentIsNotNullOrWhiteSpace(null, "paramName", "My Message"));
             Assert.Equal("paramName", exception.ParamName);
-#if NET35
-            Assert.True(exception.Message.StartsWith("My Message"));
-#else
             Assert.StartsWith("My Message", exception.Message);
-#endif
         }
 
         [Fact]
@@ -114,10 +101,8 @@ namespace ComporiTest
             //
             // Test usage
             //
-            ArgumentOutOfRangeException exception;
 
-            // 0
-            exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsInRange(1, "paramName", v => v < 1));
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsInRange(1, "paramName", v => v < 1));
             Assert.Equal(1, exception.ActualValue);
             Assert.Equal("paramName", exception.ParamName);
 
@@ -130,49 +115,77 @@ namespace ComporiTest
             exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsInRange(1, "paramName", v => v < 1, "My Message"));
             Assert.Equal(1, exception.ActualValue);
             Assert.Equal("paramName", exception.ParamName);
-#if NET35
-            Assert.True(exception.Message.StartsWith("My Message"));
-#else
             Assert.StartsWith("My Message", exception.Message);
-#endif
-
         }
 
         [Fact]
+        public void AssertArgumentIsGreaterThanZeroTest()
+        {
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterThanZero(0, "paramName", "My Message"));
+            Assert.Equal(0, exception.ActualValue);
+            Assert.Equal("paramName", exception.ParamName);
+            Assert.StartsWith("My Message", exception.Message);
+
+            Guard.AssertArgumentIsGreaterThanZero(1, "paramName", "My Message");
+
+            exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterThanZero(0L, "paramName", "My Message"));
+            Assert.Equal(0L, exception.ActualValue);
+            Assert.Equal("paramName", exception.ParamName);
+            Assert.StartsWith("My Message", exception.Message);
+
+            Guard.AssertArgumentIsGreaterThanZero(1L, "paramName", "My Message");
+        }
+
+        [Fact]
+        public void AssertArgumentIsGreaterOrEqualZeroTest()
+        {
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterOrEqualZero(-1, "paramName", "My Message"));
+            Assert.Equal(-1, exception.ActualValue);
+            Assert.Equal("paramName", exception.ParamName);
+            Assert.StartsWith("My Message", exception.Message);
+            Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterOrEqualZero(-1, "paramName", "My Message"));
+
+            Guard.AssertArgumentIsGreaterOrEqualZero(0, "paramName", "My Message");
+
+
+            exception = Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterOrEqualZero(-1L, "paramName", "My Message"));
+            Assert.Equal(-1L, exception.ActualValue);
+            Assert.Equal("paramName", exception.ParamName);
+            Assert.StartsWith("My Message", exception.Message);
+            Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AssertArgumentIsGreaterOrEqualZero(-1L, "paramName", "My Message"));
+
+            Guard.AssertArgumentIsGreaterOrEqualZero(0L, "paramName", "My Message");
+        }
+
+        [Fact]
+        [SuppressMessage("ReSharper", "JoinDeclarationAndInitializer")]
         public void TestAssertObjectIsNotDisposed()
         {
             Mock<IDisposalState> mock;
-            bool expect = false;
-            string message = "";
+            string message;
             IDisposalState sut;
 
             // Testing Guard on disposal state
-            expect = false;
             mock = new Mock<IDisposalState>();
-            mock.Setup(service => service.IsDisposed).Returns(expect);
+            mock.Setup(service => service.IsDisposed).Returns(false);
             sut = mock.Object;
             Guard.AssertObjectIsNotDisposed(sut);
             mock.Verify(service => service.IsDisposed, Times.Once());
 
-            expect = true;
             mock = new Mock<IDisposalState>();
-            mock.Setup(service => service.IsDisposed).Returns(expect);
+            mock.Setup(service => service.IsDisposed).Returns(true);
             sut = mock.Object;
             Assert.Throws<ObjectDisposedException>(() => Guard.AssertObjectIsNotDisposed(sut));
             mock.Verify(service => service.IsDisposed, Times.Once());
 
             message = "Dispose message.";
-            expect = true;
             mock = new Mock<IDisposalState>();
-            mock.Setup(service => service.IsDisposed).Returns(expect);
+            mock.Setup(service => service.IsDisposed).Returns(true);
             sut = mock.Object;
             var exception = Assert.Throws<ObjectDisposedException>(() => Guard.AssertObjectIsNotDisposed(sut, message));
             mock.Verify(service => service.IsDisposed, Times.Once());
-#if NET35
-            Assert.True(exception.Message.StartsWith(message));
-#else
+
             Assert.StartsWith(message, exception.Message);
-#endif
         }
     }
 }

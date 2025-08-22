@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Compori.StringExtensions
+﻿namespace Compori.StringExtensions
 {
     /// <summary>
     /// String Extensions class for Backport
@@ -14,12 +10,12 @@ namespace Compori.StringExtensions
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns><c>true</c> if [is null or white space] [the specified instance]; otherwise, <c>false</c>.</returns>
-        public static bool IsNullOrWhiteSpace(this String instance)
+        public static bool IsNullOrWhiteSpace(this string instance)
         {
 #if NET35
-            return String.IsNullOrEmpty(instance) || instance.Trim().Length == 0;
+            return string.IsNullOrEmpty(instance) || instance.Trim().Length == 0;
 #else
-            return String.IsNullOrWhiteSpace(instance);
+            return string.IsNullOrWhiteSpace(instance);
 #endif
         }
     }

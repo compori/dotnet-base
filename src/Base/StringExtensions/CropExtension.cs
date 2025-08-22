@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Compori.StringExtensions
+﻿namespace Compori.StringExtensions
 {
     /// <summary>
     /// String Extensions class for handling cuts values
@@ -18,12 +13,14 @@ namespace Compori.StringExtensions
         /// <returns>System.String.</returns>
         public static string Crop(this string value, int length)
         {
-            if (value != null && value.Length > length)
+            if (value == null || value.Length <= length)
             {
-                Guard.AssertArgumentIsInRange(length, nameof(length), v => v >= 0, "Length cannot be less than zero.");
-                return value.Substring(0, length);
+                return value;
             }
-            return value;
+
+            Guard.AssertArgumentIsInRange(length, nameof(length), v => v >= 0, "Length cannot be less than zero.");
+            
+            return value.Substring(0, length);
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace Compori
 {
@@ -12,17 +9,8 @@ namespace Compori
     /// The Guard class provides methods for checking parameter values.
     /// The actual program code will be cleaner and easier to maintain.
     /// </summary>
-    sealed public class Guard
+    public static class Guard
     {
-
-        /// <summary>
-        /// Prevents a default instance of the <see cref="Guard"/> class from being created.
-        /// </summary>
-        private Guard()
-        {
-            throw new InvalidOperationException("This class cannot be instantiated.");
-        }
-
         /// <summary>
         /// Assures that the parameter value is not null.
         /// If the assertion is violated, an <see cref="ArgumentNullException" /> will be is thrown.
@@ -32,22 +20,24 @@ namespace Compori
         /// <param name="message">A message that is passed as an exception message.</param>
         /// <exception cref="ArgumentNullException"></exception>
         [DebuggerHidden()]
-        public static void AssertArgumentIsNotNull(Object value, string argument, string message)
+        public static void AssertArgumentIsNotNull(object value, string argument, string message)
         {
-            // Prüfe den Parametername
+            // Checking parameter name
             if (argument.IsNullOrWhiteSpace())
             {
                 throw new ArgumentNullException(nameof(argument));
             }
 
-            if (value == null)
+            if (value != null)
             {
-                if (message == null)
-                {
-                    throw new ArgumentNullException(argument);
-                }
-                throw new ArgumentNullException(argument, message);
+                return;
             }
+
+            if (message == null)
+            {
+                throw new ArgumentNullException(argument);
+            }
+            throw new ArgumentNullException(argument, message);
         }
 
         /// <summary>
@@ -80,14 +70,16 @@ namespace Compori
             }
 
             // Check value of "argument"
-            if (value.IsNullOrWhiteSpace())
+            if (!value.IsNullOrWhiteSpace())
             {
-                if (message == null)
-                {
-                    throw new ArgumentNullException(argument);
-                }
-                throw new ArgumentNullException(argument, message);
+                return;
             }
+
+            if (message == null)
+            {
+                throw new ArgumentNullException(argument);
+            }
+            throw new ArgumentNullException(argument, message);
         }
 
         /// <summary>
@@ -99,7 +91,7 @@ namespace Compori
         [DebuggerHidden()]
         public static void AssertArgumentIsNotNullOrWhiteSpace(string value, string argument)
         {
-            Guard.AssertArgumentIsNotNullOrWhiteSpace(value, argument, null);
+            AssertArgumentIsNotNullOrWhiteSpace(value, argument, null);
         }
 
         /// <summary>
@@ -117,19 +109,21 @@ namespace Compori
         [DebuggerHidden()]
         public static void AssertArgumentIsInRange<T>(T value, string argument, Func<T, bool> check, string message)
         {
-            Guard.AssertArgumentIsNotNullOrWhiteSpace(argument, nameof(argument));
-            Guard.AssertArgumentIsNotNull(check, nameof(check));
+            AssertArgumentIsNotNullOrWhiteSpace(argument, nameof(argument));
+            AssertArgumentIsNotNull(check, nameof(check));
 
             // Invoke check function
-            if (!check(value))
+            if (check(value))
             {
-                if (message == null)
-                {
-                    throw new ArgumentOutOfRangeException(argument, value, "Specified argument was out of the range of valid values.");
-                }
-
-                throw new ArgumentOutOfRangeException(argument, value, message);
+                return;
             }
+
+            if (message == null)
+            {
+                throw new ArgumentOutOfRangeException(argument, value, "Specified argument was out of the range of valid values.");
+            }
+
+            throw new ArgumentOutOfRangeException(argument, value, message);
         }
 
         /// <summary>
@@ -143,7 +137,59 @@ namespace Compori
         [DebuggerHidden()]
         public static void AssertArgumentIsInRange<T>(T value, string argument, Func<T, bool> check)
         {
-            Guard.AssertArgumentIsInRange<T>(value, argument, check, null);
+            AssertArgumentIsInRange(value, argument, check, null);
+        }
+
+        /// <summary>
+        /// Assures that the parameter value is greater than zero.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException"/> will be thrown.
+        /// </summary>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        [DebuggerHidden()]
+        public static void AssertArgumentIsGreaterThanZero(int value, string argument, string message = null)
+        {
+            AssertArgumentIsInRange(value, argument, v => v > 0, message);
+        }
+
+        /// <summary>
+        /// Assures that the parameter value is greater than zero.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException"/> will be thrown.
+        /// </summary>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        [DebuggerHidden()]
+        public static void AssertArgumentIsGreaterOrEqualZero(int value, string argument, string message = null)
+        {
+            AssertArgumentIsInRange(value, argument, v => v >= 0, message);
+        }
+
+        /// <summary>
+        /// Assures that the parameter value is greater than zero.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException"/> will be thrown.
+        /// </summary>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        [DebuggerHidden()]
+        public static void AssertArgumentIsGreaterThanZero(long value, string argument, string message = null)
+        {
+            AssertArgumentIsInRange(value, argument, v => v > 0, message);
+        }
+
+        /// <summary>
+        /// Assures that the parameter value is greater than zero.
+        /// If the assurance is violated, then an <see cref="ArgumentOutOfRangeException"/> will be thrown.
+        /// </summary>
+        /// <param name="value">The value of the parameter to be checked.</param>
+        /// <param name="argument">The name of the parameter to be checked.</param>
+        /// <param name="message">A message that is passed as an exception message.</param>
+        [DebuggerHidden()]
+        public static void AssertArgumentIsGreaterOrEqualZero(long value, string argument, string message = null)
+        {
+            AssertArgumentIsInRange(value, argument, v => v >= 0, message);
         }
 
         /// <summary>
@@ -155,17 +201,19 @@ namespace Compori
         [DebuggerHidden()]
         public static void AssertObjectIsNotDisposed(IDisposalState instance, string message)
         {
-            Guard.AssertArgumentIsNotNull(instance, nameof(instance));
+            AssertArgumentIsNotNull(instance, nameof(instance));
 
-            if (instance.IsDisposed)
+            if (!instance.IsDisposed)
             {
-                if (message == null)
-                {
-                    throw new ObjectDisposedException(instance.ToString());
-                }
-
-                throw new ObjectDisposedException(instance.ToString(), message);
+                return;
             }
+
+            if (message == null)
+            {
+                throw new ObjectDisposedException(instance.ToString());
+            }
+
+            throw new ObjectDisposedException(instance.ToString(), message);
         }
 
         /// <summary>
@@ -176,7 +224,7 @@ namespace Compori
         [DebuggerHidden()]
         public static void AssertObjectIsNotDisposed(IDisposalState value)
         {
-            Guard.AssertObjectIsNotDisposed(value, null);
+            AssertObjectIsNotDisposed(value, null);
         }
     }
 }

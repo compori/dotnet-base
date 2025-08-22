@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace Compori.StringExtensions
 {
@@ -11,13 +8,13 @@ namespace Compori.StringExtensions
     public static class IndexOfExtension
     {
         /// <summary>
-        /// Searching for the first occurence of a charater with satisfying the condition that 
+        /// Searching for the first occurence of a character with satisfying the condition that 
         /// every previous characters must be allowed explicitly.
         /// </summary>
-        /// <param name="instance">The string intance</param>
+        /// <param name="instance">The string instance</param>
         /// <param name="search">Searching character</param>
         /// <param name="allowedChars">Allowed characters</param>
-        /// <returns>Position of search charachter</returns>
+        /// <returns>Position of search character</returns>
         public static int IndexOf(this string instance, char search, char[] allowedChars)
         {
             Guard.AssertArgumentIsNotNull(allowedChars, nameof(allowedChars));
